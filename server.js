@@ -106,15 +106,25 @@ server.get("/", (request, response) => {
 
 //gestisco la route "/bacheca"
 server.get("/bacheca", (request, response) => {
-  // const nameFilter = request.query.term;
+  //salvo la richiesta in una variabile
+  const nameFilter = request.query.term;
 
-  // const filteredPosts = posts.filter((nameFilter) => {
-  //   let nameIsPresent;
+  //se è presente la richiesta
+  if (nameFilter) {
+    //salvo il numero di post perchè altrimenti tolowercase crea problemi
+    const counter = posts.shift();
 
-  // })
-  //da fare bonus per filtrare richieste
+    //creo un array con solo gli elementi filtrati
+    const filteredPosts = posts.filter((post) => {
+      return post.titolo.toLowerCase().includes(nameFilter.toLowerCase());
+    });
 
-  response.json(posts);
+    //riaggiungo il contatore a posts
+    posts.unshift(counter);
+
+    //rispondo con il json contenente i post
+    response.json(filteredPosts);
+  } else response.json(posts);
 });
 
 //ascolto per eventuali richieste
