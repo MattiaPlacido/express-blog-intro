@@ -44,8 +44,6 @@ class post {
 
 //creo l'array dei posts
 const posts = [];
-//il primo elemento è il numero di posts presenti, questo per facilitare lo scambio di dati nel json e non aggiungere altri parametri da passare all'utente
-posts[0] = 0;
 
 //genero i posts
 posts.push(
@@ -94,7 +92,7 @@ posts.push(
 );
 
 //aggiorno il numero di posts
-posts[0] = posts.length - 1;
+const counter = posts.length;
 
 //rendo visibili i contenuti statici nella cartella public
 server.use(express.static("public"));
@@ -111,20 +109,14 @@ server.get("/bacheca", (request, response) => {
 
   //se è presente la richiesta
   if (nameFilter) {
-    //salvo il numero di post perchè altrimenti tolowercase crea problemi
-    const counter = posts.shift();
-
     //creo un array con solo gli elementi filtrati
     const filteredPosts = posts.filter((post) => {
       return post.titolo.toLowerCase().includes(nameFilter.toLowerCase());
     });
 
-    //riaggiungo il contatore a posts
-    posts.unshift(counter);
-
     //rispondo con il json contenente i post
-    response.json(filteredPosts);
-  } else response.json(posts);
+    response.json({ counter, filteredPosts });
+  } else response.json({ counter, posts });
 });
 
 //ascolto per eventuali richieste
